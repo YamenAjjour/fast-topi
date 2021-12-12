@@ -1,6 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 app = FastAPI()
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+
+
+@app.get("/topics/")
+async def read_item(title: str = Query("no-title",min_length=3,max_length=50)):
+    return {"topic":title}
 
