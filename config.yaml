@@ -8,7 +8,15 @@ dataset:
 sample:
   path: data/dataset-sample.csv
 
+
+experiment:
+  holdout_percentage: 0.1
+
 experiment-sample:
   path_holdout: data/holdout-sample.csv
   path_training: data/training-sample.csv
+  size: 100
+
+baseline:
+  path: models/baseline.pkl
 

@@ -1,7 +1,19 @@
 from fastapi import FastAPI, Query
+from model import *
+from  config import *
 app = FastAPI()
 
 
-@app.get("/topics/")
+
+
+def create_model():
+    path_model=get_path_model("baseline")
+    model=load_model(path_model)
+    return model
+
+model =  create_model()
+
+@app.get("/categories/")
 def read_item(title: str = Query("no-title",min_length=3,max_length=50)):
-    return {"topic":title}
+    category = predict_title(model,title)
+    return {"category":category}

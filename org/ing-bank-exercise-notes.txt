@@ -159,7 +159,7 @@ Variables
     split = namedtulpe(training,test)
     metrics = namedtulpe(f1,r,p)
     load_train_dataset()
-    create_train_holdout_splits(holdout_percentage: float)
+    create_experiment_splits(holdout_percentage: float)
         save heldout % of the dataset as holdout
         save train % of the dataset as holdout
     load_train_holdout_splits()
@@ -171,7 +171,7 @@ Variables
         split the rest into n folds
         return the splits
     calculate_effectiveness(model,test_set) -> dict[int:class]=metrics
-    cross_validate(model,list[hyperprameters]) -> dict[int:class]=metrics
+    cross_validate(model,df_dataset,list[hyperprameters]) -> dict[int:class]=metrics
       loads hyperparameter from the configuration file
       load count of splits from the configuration file
       create_cross_validation_splits(splits_count)
@@ -179,8 +179,8 @@ Variables
       evaluate the models on each splits and save metrics
       average the metrics over the splits
 
-    test(model,hyperparameters) -> dict[int:class]=metrics
-        load_train_holdout_splits()
+    test(model,splits,hyperparameters) -> dict[int:class]=metrics
+
         train model on the train
         test the model on the hold
         return a dictionary of metrics for the four classes and the macro
@@ -190,7 +190,7 @@ Variables
         train model on the dataset
         save the model to model_path in config.yaml
     main
-        run_experiment --model --baseline --cross-validation  --test --train
+        run_experiment --model --baseline --cross-validation  --test --train --sample
   - tests
       - test_api.py
           test_empty_string()

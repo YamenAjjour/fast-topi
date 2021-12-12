@@ -5,7 +5,6 @@ import urllib.request
 import zipfile
 from config import *
 
-
 def download_dataset(url_dataset, path_zip_dataset):
     urllib.request.urlretrieve(url_dataset, path_zip_dataset)
 
@@ -44,7 +43,14 @@ def preprocess_dataset():
 def load_dataset():
     path_preprocessed_dataset = get_path_preprocessed_dataset()
     dataset_df = pd.read_csv(path_preprocessed_dataset,sep="\t",encoding="utf-8")
+
+
     return dataset_df
+
+def load_sample():
+    dataset_df = load_dataset()
+    sample_size = get_sample_experiment_size()
+    return dataset_df.sample(sample_size)
 
 def get_label(category):
     if category == "e":
