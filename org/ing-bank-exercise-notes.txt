@@ -1,0 +1,250 @@
+- predictive model to classify headlines into 4 categories
+- rest api to serve the model
+- a python or bash script that uses the api from the command line
+- presentation
+- a jupyter notebook for exploratory data analysis
+
+- performance is not very important
+- step-by-step approach and thought process
+- soundness and robustness of the solution and evaluation metrics
+- quality and clarity of the code and documented
+- improvement suggestions
+
+
+[Plan]
+- thinking of stake holders and identifying the risks
+                                            goals                                                       risks                                                           Time
+- explore that data                        getting insights about the problem                            missing domain-knowledge                                       1 h
+- project planning                                                                                                                                                      2 h
+  * project structure
+  * APIs
+  * deployment
+- design the api                           deciding the input, output and their format                   knwoledge of standard and how-to of desgining apis             0.5 h
+    * input and the output (format, and constarints)
+- deployment                               setting up a local server to host the model                                                                                   1 h
+  * a running server that
+- testing                                  Verifying that the model and the service works reliably        missing errors
+  - testing the api
+- developing the model                     developing a program the can reliably solve the problem       bias, not generalizable enough
+    * experiment (splits, and evaluation metrics)
+- documenting the code                     Making the code easy to use and extend                         being too specific or too generic
+    * HTML documents descriping the code
+- documenting the project
+    * README file
+- doing the presentation                   Shows ING-Bank the strength of my profile thorught the homework by focusing on
+    * Presentation
+                                                  - Showing the thought process
+                                                  - Soundness and robustness of the model and service
+                                                  - Clarity and Readability of code
+
+# Todos
+  - calculate relative percentage
+  - cache ngrams
+
+
+
+[Data Format]
+  id              integer
+  title           string
+  url             url of the article
+  publisher       name of the publisher
+  category        b, t, e, m *
+  story           alphanummeric id
+  hostname        string
+  timestamp       timestamp
+  *
+  business
+  technology
+  entertainment
+  health
+
+
+[Exploratory Data Analysis]
+
+  is the category dependent on the publisher?
+    yes
+  are there stories covering multiple categories
+    no
+  do the title have the same length distribtuion over categories no
+    no
+
+
+March 10 to August 10 of 2014
+
+Variables
+  Story Cluster ? sub-categories
+
+# Distribution
+
+422937 news pages
+  152746 	news of entertainment category                        36 %
+  115920 	news of business category                             27 %
+  108465 	news of science and technology category               25 %
+   45615 	news of health category                               10 %
+
+
+[Project Structure]
+
+  - api.py
+    - load model
+        if there a model
+            load the model
+        else:
+            train the model
+    - serve(port)
+        load model
+
+
+  - client.py
+  - config.py
+    - load_hyperparameters()
+    - load_train_holdout_pathes()
+    - load_splits_counts()
+    - load_model_path()
+    - load_dataset_path()
+  - config.yaml
+  - config-test.yaml
+  - data
+    - datatset.csv
+    - holdout.csv
+    - training.csv
+    - dataset-sample.csv
+    - holdout-sample.csv
+    - training-sample.csv
+  -models
+    - model.pkl
+
+  - docs
+
+  - docker
+    - Dockefile
+  - setup.py
+  - requirements.txt
+  - deploy.sh
+    - upload pypi package
+    - setup a docker container
+        - install the pypi package
+        - run the api
+
+  - model.py
+    - create_baseline()
+    - create_model(metavariable: dict) -> sklearn.pipeline
+    - train_model(model, training_df )
+    - predict(model,test_df) -> List[int]
+    - predict_title(model,title) -> int
+    - dump_model(path)  -> None
+    - load_model(path)  -> model
+
+
+  - dataset.py
+    - download_dataset()
+    - load_dataset() -> dataframe
+    - create_sample()
+    - load_sample() -> dataframe
+
+  - experiment.py
+    split = namedtulpe(training,test)
+    metrics = namedtulpe(f1,r,p)
+    load_train_dataset()
+    create_train_holdout_splits(holdout_percentage: float)
+        save heldout % of the dataset as holdout
+        save train % of the dataset as holdout
+    load_train_holdout_splits()
+    create_cross_validation_splits(splits_count) -> List(split)
+        load_train_dataset()
+        split the train dataset into splits_count folds ()
+        return the splits
+    oversample
+        split the rest into n folds
+        return the splits
+    calculate_effectiveness(model,test_set) -> dict[int:class]=metrics
+    cross_validate(model,list[hyperprameters]) -> dict[int:class]=metrics
+      loads hyperparameter from the configuration file
+      load count of splits from the configuration file
+      create_cross_validation_splits(splits_count)
+      train model with each set of the hyperparameter
+      evaluate the models on each splits and save metrics
+      average the metrics over the splits
+
+    test(model,hyperparameters) -> dict[int:class]=metrics
+        load_train_holdout_splits()
+        train model on the train
+        test the model on the hold
+        return a dictionary of metrics for the four classes and the macro
+    train(model, hyperparameters) ->
+
+        load dataset()
+        train model on the dataset
+        save the model to model_path in config.yaml
+    main
+        run_experiment --model --baseline --cross-validation  --test --train
+  - tests
+      - test_api.py
+          test_empty_string()
+          test_non_english()
+          test_long_document()
+          test()
+      - test_model.py
+          train a model
+          test_dump_model
+              does the model exists?
+          test_load_model
+              can the model be loaded
+          test_predict
+              how does the function respond when model or test_df are null
+          test_predict_title
+              how does the function respond if the title or the model are null
+              how does the function respond if the title is not-english
+              how does the function respond if the title is empty
+              how does the function respond if tht title is in the wrong encoding
+      - test_dataset.py
+          can the dataset be loaded
+      - test_experiment.py
+          test_create_train_holdout_splits()
+              are the dataset saved
+              are they exclusive
+          - test_load_train_holdout_splits()
+              are the dataset loaded
+          - test_create_cross_validation_splits()
+              are the n splits created?
+              are they exclusive
+          - test_calculate_effectiveness()
+              is the effectiveness calculated properly
+              create a majority_baseline
+              calculate by hand the effectiveness scores for dataset sample
+          - test_test()
+                is the expected dictionary for the baseline returned
+          - test_train
+                is the model saved
+      - test_config.py
+            can the configurations be loaded?
+
+  - README.md
+        How to run cross validation_experiment?
+
+            navigate to the root of the project and run.
+                experiment --cross-validation
+            to change the count of splits change the parameter cv_split_counts in conf.yaml
+
+        How to run_experiment?
+            navigate to the root of project and run
+                experiment --test
+            to change the percentage of the test split change the parameter holdout_perc in conf.yaml
+
+        How to train a model?
+               experiment --train
+
+        How to test the code?
+            python -m unittest
+        How to deploy the service?
+            deploy.sh -port
+            This will run a web service in the loal host with the given port
+        Using the service
+            Predicting the topic of a title can be done using the following command.
+            client.py --title a given title and return a string
+
+        Using the service from the code
+
+
+
+
