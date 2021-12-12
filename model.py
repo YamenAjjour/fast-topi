@@ -1,7 +1,5 @@
 from sklearn.dummy import DummyClassifier
 
-def get_label(category):
-    if cateogry == ""
 
 def create_baseline():
     baseline = DummyClassifier(strategy="most_frequent")

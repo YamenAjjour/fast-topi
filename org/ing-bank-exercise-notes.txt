@@ -75,13 +75,19 @@ Variables
   Story Cluster ? sub-categories
 
 # Distribution
+422746
 
 422937 news pages
-  152746 	news of entertainment category                        36 %
-  115920 	news of business category                             27 %
-  108465 	news of science and technology category               25 %
-   45615 	news of health category                               10 %
+  152828 	news of entertainment category                        36 %
+  115967 	news of business category                             27 %
+  108503 	news of science and technology category               25 %
+   45639 	news of health category                               10 %
 
+422419
+  152469   news of entertainment category               152828
+  115967   news of business category
+  108344   news of tech                                 108503
+  45639    nes of health                                45639
 
 [Project Structure]
 
@@ -97,23 +103,28 @@ Variables
 
   - client.py
   - config.py
-    - load_hyperparameters()
-    - load_train_holdout_pathes()
-    - load_splits_counts()
-    - load_model_path()
-    - load_dataset_path()
+    - get_hyperparameters()
+    - get_pathes_experiment_sample()
+    - get_pathes_experiment()
+    - get_splits_counts()
+    - get_path_model()
+    - get_path_dataset()
   - config.yaml
   - config-test.yaml
   - data
     - datatset.csv
+    - dataset-preprocessed.csv
     - holdout.csv
     - training.csv
     - dataset-sample.csv
     - holdout-sample.csv
     - training-sample.csv
-  -models
-    - model.pkl
-
+  - dataset.py
+    - download_dataset()
+    - preprocess_dataset()
+    - load_dataset() -> dataframe
+    - create_sample()
+    - load_sample() -> dataframe
   - docs
 
   - docker
@@ -134,7 +145,8 @@ Variables
     - predict_title(model,title) -> int
     - dump_model(path)  -> None
     - load_model(path)  -> model
-
+  -models
+    - model.pkl
 
   - dataset.py
     - download_dataset()
