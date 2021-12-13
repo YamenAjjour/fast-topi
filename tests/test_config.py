@@ -6,8 +6,8 @@ class TestConfig(unittest.TestCase):
         return  abspath(os.path.dirname(__file__) + "/../")
 
 
-    def test_get_pathes_sample_experiment(self):
-        path_holdout, path_training = config.get_pathes_sample_experiment()
+    def test_get_pathes_experiment(self):
+        path_holdout, path_training = config.get_pathes_experiment(True)
         self.assertEqual(path_holdout,"data/holdout-sample.csv")
         self.assertEqual(path_training,"data/training-sample.csv")
 
