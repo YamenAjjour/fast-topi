@@ -69,4 +69,13 @@ def get_url_dataset():
     url_dataset = config["dataset"]["url"]
     return url_dataset
 
+def get_hyper_parameter():
+    config = load_config()
+    all_cs = config["model"]["c"]
+    return all_cs
+
+def get_best_hyper_parameter():
+    config = load_config()
+    c= config["model"]["c_best"]
+    return c
 

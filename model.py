@@ -1,6 +1,7 @@
 import pickle
 from sklearn.dummy import DummyClassifier
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -10,17 +11,19 @@ def create_baseline():
     baseline = DummyClassifier(strategy="constant",constant=[0])
     return baseline
 
-def create_model():
-    token_n_grams = CountVectorizer(ngram_range=(1,3))
-    pipeline = Pipeline([('ngram',CountVectorizer),('normalizer',StandardScaler(with_mean=False)),('logistic-regression',logistic_regression)])
+def create_model(c):
+    token_n_grams = CountVectorizer(ngram_range=(1,3),max_features=1000,stop_words={'english'})
+    logistic_regression = LogisticRegression(C=c)
+    pipeline = Pipeline([('ngram',token_n_grams),('normalizer',StandardScaler(with_mean=False)),('logistic-regression',logistic_regression)])
+    return  pipeline
 
 def train_model(model,training_set):
-    titles,labels =  zip(*training_set)
+    titles, labels =  training_set.titles, training_set.labels
     model = model.fit(titles,labels)
     return model
 
 def predict_title(model,title):
-    prediction = model.predict(title)
+    prediction = model.predict([title])
     category = get_descriptive_category(prediction[0])
     return category
 

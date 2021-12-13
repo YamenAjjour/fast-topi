@@ -27,6 +27,7 @@
   - testing the api
 - developing the model                     developing a program the can reliably solve the problem       bias, not generalizable enough
     * experiment (splits, and evaluation metrics)
+- deployment
 - documenting the code                     Making the code easy to use and extend                         being too specific or too generic
     * HTML documents descriping the code
 - documenting the project

@@ -1,6 +1,5 @@
 import warnings
 warnings.filterwarnings('ignore')
-
 import argparse
 from collections import namedtuple, defaultdict
 import pandas as pd
@@ -15,8 +14,9 @@ from model import *
 
 Split = namedtuple("Split", "test training")
 
+
 class Metrics:
-    def __init__(self,p, r , f1):
+    def __init__(self, p, r, f1):
         self.p = p
         self.r = r
         self.f1 = f1
@@ -24,18 +24,8 @@ class Metrics:
     def __repr__(self):
         return f"precision {self.p:2.2f}    recall {self.r:2.2f}       f1-score  {self.f1:2.2f}"
 
-def unzip(dataset):
-    """
-    Unzip a  zipped set into titles and labels
-    :param dataset: a zipped set whose first element contains a list of titles and second element contains an array of
-    labels
-    :return: a list of titles and an array with the labels
-    """
-    titles, labels = zip(*dataset)
-    return titles, np.array(labels)
-
 def select(titles, index):
-    selected_titles=[]
+    selected_titles = []
     for i in index:
         selected_titles.append(titles[i])
     return selected_titles
@@ -56,11 +46,12 @@ def split_dataset(dataset_df, holdout_perc):
     return Split(test=holdout_df, training=training_df)
 
 
-def calculate_metrics(labels,predictions,label):
-    f1 = f1_score(labels, predictions, average=None,pos_label=label)
-    precision = precision_score(labels, predictions, average=None,pos_label=label)
-    recall = recall_score(labels, predictions, average=None,pos_label=label)
+def calculate_metrics(labels, predictions, label):
+    f1 = f1_score(labels, predictions, average=None, pos_label=label)
+    precision = precision_score(labels, predictions, average=None, pos_label=label)
+    recall = recall_score(labels, predictions, average=None, pos_label=label)
     return Metrics(p=precision, r=recall, f1=f1)
+
 
 def calculate_effectiveness(model, test_set):
     """
@@ -72,16 +63,16 @@ def calculate_effectiveness(model, test_set):
     """
     metrics = {}
 
-    titles, labels = unzip(test_set)
+    titles, labels = test_set.titles, test_set.labels
     predictions = predict(model, titles)
 
-    f1s = f1_score(labels, predictions, average=None,labels=[0,1,2,3])
-    precisions = precision_score(labels, predictions, average=None,labels=[0,1,2,3])
-    recalls = recall_score(labels, predictions, average=None,labels=[0,1,2,3])
+    f1s = f1_score(labels, predictions, average=None, labels=[0, 1, 2, 3])
+    precisions = precision_score(labels, predictions, average=None, labels=[0, 1, 2, 3])
+    recalls = recall_score(labels, predictions, average=None, labels=[0, 1, 2, 3])
 
-    macro_f1_score = f1_score(labels, predictions, average='macro',labels=[0,1,2,3])
-    macro_precision = precision_score(labels, predictions, average='macro',labels=[0,1,2,3])
-    macro_recall = recall_score(labels, predictions, average='macro',labels=[0,1,2,3])
+    macro_f1_score = f1_score(labels, predictions, average='macro', labels=[0, 1, 2, 3])
+    macro_precision = precision_score(labels, predictions, average='macro', labels=[0, 1, 2, 3])
+    macro_recall = recall_score(labels, predictions, average='macro', labels=[0, 1, 2, 3])
 
     metrics['macro'] = Metrics(p=macro_precision, r=macro_recall, f1=macro_f1_score)
 
@@ -100,8 +91,7 @@ def average_metrics(splits_metrics):
     precision, recall, and f1-score stored as Metrics
     """
 
-    average_metric = defaultdict(lambda : Metrics(p=0,r=0,f1=0))
-
+    average_metric = defaultdict(lambda: Metrics(p=0, r=0, f1=0))
 
     for split_metric in splits_metrics:
         for label in split_metric:
@@ -142,7 +132,7 @@ def create_experiment(sample=False):
         dataset_df = load_dataset(sample_experiment_size)
     else:
         dataset_df = load_dataset()
-
+    dataset_df=dataset_df.sample(frac=1.0,random_state=85)
     split = split_dataset(dataset_df, holdout_perc)
 
     split.test.to_csv(path_holdout, sep="\t", encoding="utf-8")
@@ -161,8 +151,10 @@ def load_experiment(sample=False):
     path_holdout, path_training = get_pathes_experiment(sample)
     holdout_df = pd.read_csv(path_holdout, sep="\t", encoding="utf-8")
     training_df = pd.read_csv(path_training, sep="\t", encoding="utf-8")
-    holdout = zip(holdout_df['title'].values, holdout_df['label'].values)
-    training = zip(training_df['title'].values, training_df['label'].values)
+
+    holdout = Set(titles=holdout_df['title'].values, labels=holdout_df['label'].values)
+    training = Set(titles=training_df['title'].values, labels=training_df['label'].values)
+
     return Split(test=holdout, training=training)
 
 
@@ -177,16 +169,18 @@ def cross_validate(model, training_set, splits_count):
     :return: average precision, recall, and f1_score for each label and the macro average after averaging them
     on all splits.
     """
-    titles, labels = unzip(training_set)
-    kfold = KFold(n_splits=splits_count, shuffle=True, random_state=122)
+    titles, labels = training_set.titles, training_set.labels
+    kfold = KFold(n_splits=splits_count)
     indices = kfold.split(titles, labels)
 
     all_folds_metrics = []
     for training_index, test_index in indices:
-        title_training, titles_test = select(titles,training_index), select(titles,test_index)
+        title_training, titles_test = select(titles, training_index), select(titles, test_index)
         labels_training, labels_test = labels[training_index], labels[test_index]
-        training_fold_set = zip(title_training, labels_training)
-        title_fold_set = zip(titles_test, labels_test)
+
+        training_fold_set = Set(titles=title_training, labels=labels_training)
+        title_fold_set = Set(titles=titles_test, labels=labels_test)
+
         train_model(model, training_fold_set)
         metrics = calculate_effectiveness(model, title_fold_set)
         all_folds_metrics.append(metrics)
@@ -213,7 +207,8 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--baseline', action="store_true", help="run the experiment using the baseline")
     parser.add_argument("--train", action="store_true", help="train the model on the whole datasetand store it")
-    parser.add_argument("--test", action="store_true", help="train the model on the training set and test on the test dataset")
+    parser.add_argument("--test", action="store_true",
+                        help="train the model on the training set and test on the test dataset")
     parser.add_argument("--sample", action="store_true", help="use the sample dataset")
     parser.add_argument("--crossvalidate", action="store_true", help="run a cross validation experiment")
     args = parser.parse_args()
@@ -223,13 +218,12 @@ def parse_args():
 def validate_args(args):
     pass
 
+
 def print_metrics(label_metrics):
     for label in label_metrics:
-        str_label = str(label)
         print(f"{label:<5}          {label_metrics[label]}")
 
 def main():
-
     args = parse_args()
     validate_args(args)
     arg_baseline = args.baseline
@@ -238,28 +232,49 @@ def main():
     arg_test = args.test
     arg_cross_validate = args.crossvalidate
 
-    if arg_baseline and arg_train :
-        model = create_baseline()
+    if arg_train:
         sample_size = get_sample_experiment_size()
         if arg_sample:
             dataset = load_dataset(sample_size, zip_dataset=True)
-        dataset = load_dataset(zip_dataset=True)
+        else:
+            dataset = load_dataset(zip_dataset=True)
+
+        if arg_baseline:
+            model = create_baseline()
+        else:
+            c = get_best_hyper_parameter()
+            model = create_model(c)
         train_model(model, dataset)
-        path_model = get_path_model("baseline")
+        path_model = get_path_model("model")
         dump_model(model, path_model)
 
-    if arg_baseline and arg_cross_validate:
-        model = create_baseline()
+    if arg_cross_validate:
         splits_count = get_splits_count()
         split = load_experiment(arg_sample)
         training_set = split.training
-        metrics = cross_validate(model, training_set, splits_count)
+        if arg_baseline:
+            model = create_baseline()
+            metrics = cross_validate(model, training_set, splits_count)
+            print_metrics(metrics)
+        else:
+            all_cs = get_hyper_parameter()
+            for c in all_cs:
+                print(f"### Hyperparameter {c} ###")
+                model = create_model(c)
+                metrics = cross_validate(model, training_set, splits_count)
+                print_metrics(metrics)
+                print("####")
+
+    if arg_test:
+        if arg_baseline:
+            model = create_baseline()
+        else:
+            c = get_best_hyper_parameter()
+            model = create_model(c)
+        split = load_experiment(arg_sample)
+        metrics = test(model, split)
         print_metrics(metrics)
 
-    if arg_baseline and arg_test:
-        split = load_experiment(arg_sample)
-        model = create_baseline()
-        metrics = test(model,split)
-        print_metrics(metrics)
+
 if __name__ == '__main__':
     main()

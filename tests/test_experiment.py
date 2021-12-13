@@ -12,7 +12,7 @@ class TestExperiment(unittest.TestCase):
     def create_dummy_test_set(self):
         labels = np.array([0, 1, 2, 3, 0])
         titles= ["title" for i in range(0,5)]
-        return zip(titles,labels)
+        return Set(titles=titles,labels=labels)
 
     def create_dummy_classifier(self):
         dummy_classifier = DummyClassifier(strategy="constant",constant=0)

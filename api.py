@@ -7,7 +7,7 @@ app = FastAPI()
 
 
 def create_model():
-    path_model=get_path_model("baseline")
+    path_model=get_path_model("model")
     model=load_model(path_model)
     return model
 

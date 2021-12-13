@@ -1,9 +1,17 @@
 import csv
 import os
+from collections import namedtuple
+import numpy as np
 import pandas as pd
 import urllib.request
 import zipfile
 from config import *
+
+class Set:
+    def __init__(self,titles, labels):
+        self.titles = titles
+        self.labels = np.array(labels)
+
 
 def download_dataset(url_dataset, path_zip_dataset):
     urllib.request.urlretrieve(url_dataset, path_zip_dataset)
@@ -47,8 +55,8 @@ def load_dataset(sample_size=None,zip_dataset=False):
         dataset_df = dataset_df.sample(sample_size)
 
     if zip_dataset:
-        zipped_dataset = zip(dataset_df['title'].values,dataset_df['label'].values)
-        return zipped_dataset
+        dataset = Set(titles=dataset_df['title'].values, labels=dataset_df['label'].values)
+        return dataset
     else:
         return dataset_df
 

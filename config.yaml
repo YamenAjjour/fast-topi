@@ -8,12 +8,17 @@ dataset:
 sample:
   path: data/dataset-sample.csv
 
-
+model:
+  c: [1000,100,10,1,0.1,0.01,0.001]
+  c_best: 0.1
+  path: models/model.pkl
+  path_training: models/models-training.pkl
 experiment:
   holdout_percentage: 0.1
   splits_count: 5
   path_holdout: data/holdout.csv
   path_training: data/training.csv
+
 experiment-sample:
   path_holdout: data/holdout-sample.csv
   path_training: data/training-sample.csv
@@ -22,3 +27,5 @@ experiment-sample:
 baseline:
   path: models/baseline.pkl
 
+baseline-testing:
+  path: models/baseline-testing.pkl
