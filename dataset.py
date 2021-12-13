@@ -43,9 +43,7 @@ def preprocess_dataset():
 def load_dataset():
     path_preprocessed_dataset = get_path_preprocessed_dataset()
     dataset_df = pd.read_csv(path_preprocessed_dataset,sep="\t",encoding="utf-8")
-
-
-    return dataset_df
+    return zip(dataset_df['label'],dataset_df['title'])
 
 def load_sample():
     dataset_df = load_dataset()
