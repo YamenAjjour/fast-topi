@@ -11,7 +11,9 @@ sample:
 
 experiment:
   holdout_percentage: 0.1
-
+  splits_count: 5
+  path_holdout: data/holdout.csv
+  path_training: data/training.csv
 experiment-sample:
   path_holdout: data/holdout-sample.csv
   path_training: data/training-sample.csv

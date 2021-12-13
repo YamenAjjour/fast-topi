@@ -40,6 +40,7 @@
 # Todos
   - calculate relative percentage
   - cache ngrams
+  - ovesample
 
 
 

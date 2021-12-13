@@ -45,15 +45,24 @@ def get_path_zip_dataset():
     path_zip_dataset = config["dataset"]["path_zip"]
     return path_zip_dataset
 
-def get_pathes_sample_experiment():
+def get_pathes_experiment(sample=False):
     """
     Get the holdout and training split pathes of the sample experiment
     :return: a tuple including path of the holdout and the training splits
     """
     config = load_config()
-    path_holdout = config["experiment-sample"]["path_holdout"]
-    path_training =  config["experiment-sample"]["path_training"]
+    if sample:
+        path_holdout = config["experiment-sample"]["path_holdout"]
+        path_training =  config["experiment-sample"]["path_training"]
+    else:
+        path_holdout = config["experiment"]["path_holdout"]
+        path_training =  config["experiment"]["path_training"]
+
     return path_holdout, path_training
+
+def get_splits_count():
+    config = load_config()
+    return config["experiment"]["splits_count"]
 
 def get_url_dataset():
     config = load_config()

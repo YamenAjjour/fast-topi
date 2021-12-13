@@ -40,15 +40,18 @@ def preprocess_dataset():
     dataset_df['label']=dataset_df['category'].apply(get_label)
     dataset_df[['title','label']].to_csv(path_preprocessed_dataset,sep="\t",encoding="utf-8",index=False)
 
-def load_dataset():
+def load_dataset(sample_size=None,zip_dataset=False):
     path_preprocessed_dataset = get_path_preprocessed_dataset()
     dataset_df = pd.read_csv(path_preprocessed_dataset,sep="\t",encoding="utf-8")
-    return zip(dataset_df['label'],dataset_df['title'])
+    if sample_size != None:
+        dataset_df = dataset_df.sample(sample_size)
 
-def load_sample():
-    dataset_df = load_dataset()
-    sample_size = get_sample_experiment_size()
-    return dataset_df.sample(sample_size)
+    if zip_dataset:
+        zipped_dataset = zip(dataset_df['title'].values,dataset_df['label'].values)
+        return zipped_dataset
+    else:
+        return dataset_df
+
 
 def get_label(category):
     if category == "e":
