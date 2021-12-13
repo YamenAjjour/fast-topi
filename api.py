@@ -14,6 +14,6 @@ def create_model():
 model =  create_model()
 
 @app.get("/categories/")
-def read_item(title: str = Query("no-title",min_length=3,max_length=50)):
+def read_item(title: str = Query("no-title",min_length=7,max_length=100)):
     category = predict_title(model,title)
     return {"category":category}
