@@ -3,8 +3,6 @@
 
 upload_package()
 {
-  rm -r -f dist
-  rm -r -f build
   python3 setup.py bdist_wheel
   python3 -m twine upload dist/* --
 }

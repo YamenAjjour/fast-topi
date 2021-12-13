@@ -2,20 +2,21 @@
 . .deploy-config
 build_docker()
 {
+  echo "building docker "
   docker build -t "$IMAGE_NAME" -f docker/Dockerfile .
 }
 
 run_docker()
 {
-  echo "_________________________"
+  echo "runing docker "
   echo "$FAST_API_PORT"
-  #docker run -dit --rm --name "$CONTAINER_NAME" -v "$(pwd)":/src  -p "$FAST_API_PORT":"$0" "$IMAGE_NAME"
-  docker run -dit  --rm --name "$CONTAINER_NAME" -p 8000:8080 -v "$(pwd)":/src  -w /src  "$IMAGE_NAME"
+  docker run -dit --rm -v "$(pwd)":/src -p 80:80 -w /src --name "$CONTAINER_NAME" --tty "$IMAGE_NAME"
 }
 
 run_service()
 {
-  docker exec -it "$CONTAINER_NAME" uvicorn api:app
+  echo "running service"
+  docker exec -it "$CONTAINER_NAME" uvicorn api:app --host 0.0.0.0 --port 80
 }
 
 push_docker()

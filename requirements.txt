@@ -2,4 +2,4 @@ sklearn
 fastapi
 uvicorn
 pandas
-yaml
+pyyaml

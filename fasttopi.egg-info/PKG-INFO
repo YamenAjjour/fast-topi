@@ -1,3 +1,14 @@
+Metadata-Version: 2.1
+Name: fasttopi
+Version: 0.21
+Summary: news categories classifiers for news title
+Home-page: UNKNOWN
+Author: Yamen Ajjour
+Author-email: yajjour@hotmail.com
+License: UNKNOWN
+Platform: UNKNOWN
+Description-Content-Type: text/markdown
+
 
 ##Overview 
 *Fast-topi* is a framework to develop and deploy models as an api service. The model or the service takes as an input a title 
@@ -23,7 +34,7 @@ To deploy a REST api locally run the following command.
 
 Once the REST api is up and running, you can use the following path to query it
 ```
-http://127.0.0.1:80/categories/?title="Elon usk named Time's Person of the year for 2021"
+http://127.0.0.1:8000/categories/?title="Elon usk named Time's Person of the year for 2021"
 ```
 This will retrun a json object containing {"category":"tech"} for this title. 
 ## Command line client 
@@ -72,3 +83,4 @@ is stored on the ``config.yaml`` file.
 
 ## Configuration
 The configuration for the REST api, model, experiments, and dataset are stored as yaml file under ``config.yaml``.
+
