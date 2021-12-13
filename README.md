@@ -23,14 +23,14 @@ To deploy a REST api locally run the following command.
 
 Once the REST api is up and running, you can use the following path to query it
 ```
-http://127.0.0.1:80/categories/?title="Elon usk named Time's Person of the year for 2021"
+http://127.0.0.1:80/categories/?title=Elon usk named Time's Person of the year for 2021
 ```
 This will retrun a json object containing {"category":"tech"} for this title. 
 ## Command line client 
 To get the news category for a given title you can use the command line client.
 A prerequisite is that the rest api is already deploied. 
 ```
-python client --title "Elon usk named Time's Person of the year for 2021"
+python client --title Elon usk named Time's Person of the year for 2021
 ```
  
 
