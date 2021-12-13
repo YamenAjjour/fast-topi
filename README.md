@@ -30,7 +30,7 @@ This will retrun a json object containing {"category":"tech"} for this title.
 To get the news category for a given title you can use the command line client.
 A prerequisite is that the rest api is already deploied. 
 ```
-python client --title Elon usk named Time's Person of the year for 2021
+python client.py --title "Elon usk named Time's Person of the year for 2021"
 ```
  
 
