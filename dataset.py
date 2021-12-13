@@ -48,6 +48,9 @@ def preprocess_dataset():
 
 def load_dataset(sample_size=None,zip_dataset=False):
     path_preprocessed_dataset = get_path_preprocessed_dataset()
+    if not os.path.exists(path_preprocessed_dataset):
+        get_dataset()
+
     dataset_df = pd.read_csv(path_preprocessed_dataset,sep="\t",encoding="utf-8")
     if sample_size != None:
         dataset_df = dataset_df.sample(sample_size)
