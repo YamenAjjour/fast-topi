@@ -1,6 +1,5 @@
 import unittest
 import os.path
-from config import *
 from model import *
 
 class TestModel(unittest.TestCase):

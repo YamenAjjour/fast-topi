@@ -226,20 +226,15 @@ def print_metrics(label_metrics):
 def main():
     args = parse_args()
     validate_args(args)
-    arg_baseline = args.baseline
-    arg_train = args.train
-    arg_sample = args.sample
-    arg_test = args.test
-    arg_cross_validate = args.crossvalidate
 
-    if arg_train:
+    if args.train:
         sample_size = get_sample_experiment_size()
-        if arg_sample:
+        if args.sample:
             dataset = load_dataset(sample_size, zip_dataset=True)
         else:
             dataset = load_dataset(zip_dataset=True)
 
-        if arg_baseline:
+        if args.baseline:
             model = create_baseline()
         else:
             c = get_best_hyper_parameter()
@@ -248,11 +243,11 @@ def main():
         path_model = get_path_model("model")
         dump_model(model, path_model)
 
-    if arg_cross_validate:
+    if args.crossvalidate:
         splits_count = get_splits_count()
-        split = load_experiment(arg_sample)
+        split = load_experiment(args.sample)
         training_set = split.training
-        if arg_baseline:
+        if args.baseline:
             model = create_baseline()
             metrics = cross_validate(model, training_set, splits_count)
             print_metrics(metrics)
@@ -265,16 +260,17 @@ def main():
                 print_metrics(metrics)
                 print("####")
 
-    if arg_test:
-        if arg_baseline:
+    if args.test:
+        if args.baseline:
             model = create_baseline()
         else:
             c = get_best_hyper_parameter()
             model = create_model(c)
-        split = load_experiment(arg_sample)
+        split = load_experiment(args.sample)
         metrics = test(model, split)
         print_metrics(metrics)
 
 
 if __name__ == '__main__':
+
     main()

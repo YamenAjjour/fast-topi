@@ -4,3 +4,6 @@
 org/
 data/
 .ipynb_checkpoints/
+build/
+dist/
+Fasttopi.egg-info/

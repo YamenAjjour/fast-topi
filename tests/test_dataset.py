@@ -1,4 +1,3 @@
-import config
 import unittest
 from dataset import *
 import os.path

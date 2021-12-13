@@ -1,7 +1,5 @@
 import unittest
-import config
 from experiment import *
-import fast_topi_logging
 
 class TestExperiment(unittest.TestCase):
 
