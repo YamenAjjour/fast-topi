@@ -13,6 +13,7 @@ model:
   c_best: 0.1
   path: models/model.pkl
   path_training: models/models-training.pkl
+
 experiment:
   holdout_percentage: 0.1
   splits_count: 5
