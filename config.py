@@ -21,6 +21,12 @@ def get_path_model(model_name):
     path_model = config[model_name]["path"]
     return path_model
 
+def get_path_model_training(model_name):
+    config = load_config()
+    path_model = config[model_name]["path_training"]
+    return path_model
+
+
 def get_path_preprocessed_dataset():
     config = load_config()
     path_dataset_preprocessed = config["dataset"]["path_preprocessed"]
@@ -72,10 +78,12 @@ def get_url_dataset():
 def get_hyper_parameter():
     config = load_config()
     all_cs = config["model"]["c"]
-    return all_cs
+    all_max_iter = config["model"]["max_iter"]
+    return all_cs, all_max_iter
 
 def get_best_hyper_parameter():
     config = load_config()
-    c= config["model"]["c_best"]
-    return c
+    c = config["model"]["c_best"]
+    max_iter = config["model"]["max_iter_best"]
+    return c, max_iter
 

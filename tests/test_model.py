@@ -40,3 +40,18 @@ class TestModel(unittest.TestCase):
             label = predict_title(model,"'entertainment news title")
             self.assertIn(label, ["tech", "entertainment", "health", "business"])
 
+    def create_dummy_test_set(self):
+        labels = np.array([0, 1, 2, 3, 0])
+        titles= ["title" for i in range(0,5)]
+        return Set(titles=titles,labels=labels)
+    def test_train_model(self):
+
+        model = create_model(0.1,100)
+
+        test_set =self.create_dummy_test_set()
+        train_model(model,test_set)
+        t = model['logistic-regression'].coef_[0]
+        self.assertIsNotNone(t = model['logistic-regression'].coef_[0])
+
+
+

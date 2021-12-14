@@ -179,10 +179,11 @@ def cross_validate(model, training_set, splits_count):
         labels_training, labels_test = labels[training_index], labels[test_index]
 
         training_fold_set = Set(titles=title_training, labels=labels_training)
-        title_fold_set = Set(titles=titles_test, labels=labels_test)
+        test_fold_set = Set(titles=titles_test, labels=labels_test)
 
         train_model(model, training_fold_set)
-        metrics = calculate_effectiveness(model, title_fold_set)
+
+        metrics = calculate_effectiveness(model, test_fold_set)
         all_folds_metrics.append(metrics)
     averaged_metrics = average_metrics(all_folds_metrics)
     return averaged_metrics
@@ -207,6 +208,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--baseline', action="store_true", help="run the experiment using the baseline")
     parser.add_argument("--train", action="store_true", help="train the model on the whole datasetand store it")
+    parser.add_argument("--no-holdout", action="store_true", help="train the model only on the training set")
     parser.add_argument("--test", action="store_true",
                         help="train the model on the training set and test on the test dataset")
     parser.add_argument("--sample", action="store_true", help="use the sample dataset")
@@ -229,18 +231,23 @@ def main():
 
     if args.train:
         sample_size = get_sample_experiment_size()
-        if args.sample:
-            dataset = load_dataset(sample_size, zip_dataset=True)
+        if args.no_holdout:
+            split = load_experiment(args.sample)
+            dataset= split.training
+            path_model = get_path_model_training("model")
         else:
-            dataset = load_dataset(zip_dataset=True)
-
+            if args.sample:
+                dataset = load_dataset(sample_size, zip_dataset=True)
+            else:
+                dataset = load_dataset(zip_dataset=True)
+            path_model = get_path_model("model")
         if args.baseline:
             model = create_baseline()
         else:
-            c = get_best_hyper_parameter()
-            model = create_model(c)
+            c, max_iter = get_best_hyper_parameter()
+            model = create_model(c, max_iter)
         train_model(model, dataset)
-        path_model = get_path_model("model")
+        print(path_model)
         dump_model(model, path_model)
 
     if args.crossvalidate:
@@ -252,20 +259,21 @@ def main():
             metrics = cross_validate(model, training_set, splits_count)
             print_metrics(metrics)
         else:
-            all_cs = get_hyper_parameter()
-            for c in all_cs:
-                print(f"### Hyperparameter {c} ###")
-                model = create_model(c)
-                metrics = cross_validate(model, training_set, splits_count)
-                print_metrics(metrics)
-                print("####")
+            all_cs,all_max_iters = get_hyper_parameter()
+            for max_iter in all_max_iters:
+                for c in all_cs:
+                    print(f"### Hyperparameter C {c}    max iteration {max_iter }    ###")
+                    model = create_model(c, max_iter)
+                    metrics = cross_validate(model, training_set, splits_count)
+                    print_metrics(metrics)
+                    print("####\n")
 
     if args.test:
         if args.baseline:
             model = create_baseline()
         else:
-            c = get_best_hyper_parameter()
-            model = create_model(c)
+            c,max_iter = get_best_hyper_parameter()
+            model = create_model(c, max_iter)
         split = load_experiment(args.sample)
         metrics = test(model, split)
         print_metrics(metrics)

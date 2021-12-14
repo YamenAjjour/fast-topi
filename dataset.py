@@ -44,6 +44,7 @@ def preprocess_dataset():
     path_source_dataset = get_path_source_dataset()
     dataset_df= pd.read_csv(path_source_dataset,sep="\t",encoding="utf-8",names=["id","title","url","publisher","category","story","hostname","timestamp"],quoting=csv.QUOTE_NONE)
     dataset_df['label']=dataset_df['category'].apply(get_label)
+    dataset_df['title']=dataset_df['title'].apply(lambda x: x.lower())
     dataset_df[['title','label']].to_csv(path_preprocessed_dataset,sep="\t",encoding="utf-8",index=False)
 
 def load_dataset(sample_size=None,zip_dataset=False):

@@ -1,6 +1,6 @@
 import pickle
 from sklearn.dummy import DummyClassifier
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import  CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -11,16 +11,16 @@ def create_baseline():
     baseline = DummyClassifier(strategy="constant",constant=[0])
     return baseline
 
-def create_model(c):
-    token_n_grams = CountVectorizer(ngram_range=(1,3),max_features=1000,stop_words={'english'})
-    logistic_regression = LogisticRegression(C=c)
+def create_model(c,max_iter):
+    token_n_grams = CountVectorizer(max_features=1000,stop_words={'english'})
+    logistic_regression = LogisticRegression(C=c,max_iter=max_iter)
     pipeline = Pipeline([('ngram',token_n_grams),('normalizer',StandardScaler(with_mean=False)),('logistic-regression',logistic_regression)])
     return  pipeline
 
 def train_model(model,training_set):
     titles, labels =  training_set.titles, training_set.labels
-    model = model.fit(titles,labels)
-    return model
+    model.fit(titles,labels)
+
 
 def predict_title(model,title):
     prediction = model.predict([title])
@@ -29,6 +29,9 @@ def predict_title(model,title):
 
 def predict(model,titles):
     return model.predict(titles)
+
+def get_probability(model,titles):
+    return model.predict_proba(titles)
 
 def dump_model(model, path_model):
     with  open(path_model, 'wb') as model_file:

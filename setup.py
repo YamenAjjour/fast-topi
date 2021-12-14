@@ -18,6 +18,6 @@ setuptools.setup(
     package_data={'': ['config.yaml','models/*.pkl']},
     description = "news categories classifiers for news title",
     long_description=open(os.path.join(ROOT_DIRECTORY, 'README.md')).read(),
-    install_requires =["scikit-learn","pandas","fastapi","uvicorn","pyyaml"],
+    install_requires =["scikit-learn==1.0.1","pandas","fastapi","uvicorn","pyyaml"],
 
 )

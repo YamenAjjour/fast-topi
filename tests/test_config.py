@@ -20,3 +20,14 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(path_preprocessed_dataset,"data/dataset-preprocessed.csv")
 
 
+    def test_get_hyperparameter(self):
+        all_cs, all_max_iter = get_hyper_parameter()
+        self.assertTrue(len(all_cs)>0)
+        self.assertIn(1, all_cs)
+        self.assertTrue(len(all_max_iter)>0)
+        self.assertIn(2000, all_max_iter)
+
+    def test_get_best_hyperparameter(self):
+        c, max_iter = get_best_hyper_parameter()
+
+        self.assertIsInstance(max_iter,int)
