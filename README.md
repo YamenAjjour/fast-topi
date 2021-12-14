@@ -1,6 +1,4 @@
 
-##Overview 
-
 *Fast-topi* is a framework to develop and deploy models as an api service. The model or the service takes as an input a title 
 and returns one of the following categories: **Entertainment**, **Tech**, **Business**, and **Health**. 
 The framework is centered around a common configuration file ``config.yaml`` where all parameters for developing the model
