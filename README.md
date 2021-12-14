@@ -77,4 +77,4 @@ The configuration for the REST api, model, experiments, and dataset are stored a
 ## Dependencies
 To install the needed dependencies use the following command.
 
-```pip3 install --r requirements.txt``` 
+```pip install --r requirements.txt``` 
