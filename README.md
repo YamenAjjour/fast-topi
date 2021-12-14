@@ -16,7 +16,7 @@ To install fast-topi using pip run
 pip install fast-topi
 ```
 ## REST API Deployment
-To deploy a REST api locally run the following command.
+To deploy a REST api locally run the following command. 
 ```
 ./deploy.sh
 ```
@@ -72,3 +72,9 @@ is stored on the ``config.yaml`` file.
 
 ## Configuration
 The configuration for the REST api, model, experiments, and dataset are stored as yaml file under ``config.yaml``.
+
+
+## Dependencies
+To install the needed dependencies use the following command.
+
+```pip3 install --r requirements.txt``` 
