@@ -4,3 +4,4 @@ uvicorn
 pandas
 pyyaml
 jupyter
+requests
